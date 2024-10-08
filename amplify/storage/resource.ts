@@ -3,13 +3,13 @@ import { defineStorage } from '@aws-amplify/backend';
 export const storage = defineStorage({
   name: 'dataAnonymizationBucket',
   access: (allow) => ({
-    'uploads/{fileName}': [
+    'uploads/*': [
       allow.authenticated.to(['read', 'write']),
     ],
     'anonymized/{fileName}': [
       allow.authenticated.to(['read']),
     ],
-    'logs/{fileName}': [
+    'logs/*': [
       allow.authenticated.to(['read', 'write']),
     ],
     lambdaFunctionAssociations: [
