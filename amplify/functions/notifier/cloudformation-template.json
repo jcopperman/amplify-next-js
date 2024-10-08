@@ -1,0 +1,16 @@
+{
+    "Resources": {
+      "LambdaFunction": {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Environment": {
+            "Variables": {
+              "BUCKET_NAME": { "Ref": "dataAnonymizationBucket" },
+              "USER_EMAIL": "user@example.com",
+              "SES_VERIFIED_EMAIL": "no-reply@yourdomain.com"
+            }
+          }
+        }
+      }
+    }
+  }

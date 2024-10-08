@@ -1,0 +1,15 @@
+{
+    "Resources": {
+      "LambdaFunction": {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Environment": {
+            "Variables": {
+              "BUCKET_NAME": { "Ref": "dataAnonymizationBucket" },
+              "ANONYMIZER_QUEUE_URL": { "Ref": "AnonymizerQueue" }
+            }
+          }
+        }
+      }
+    }
+  }
