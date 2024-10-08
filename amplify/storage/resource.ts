@@ -6,17 +6,11 @@ export const storage = defineStorage({
     'uploads/*': [
       allow.authenticated.to(['read', 'write']),
     ],
-    'anonymized/*': [  // Changed from 'anonymized/{fileName}' to 'anonymized/*'
+    'anonymized/*': [
       allow.authenticated.to(['read']),
     ],
     'logs/*': [
       allow.authenticated.to(['read', 'write']),
-    ],
-    lambdaFunctionAssociations: [
-      {
-        event: 's3:ObjectCreated:*',
-        lambdaFunction: 'uploadHandler', 
-      },
     ],
   }),
 });
