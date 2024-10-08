@@ -6,7 +6,7 @@ export const storage = defineStorage({
     'uploads/*': [
       allow.authenticated.to(['read', 'write']),
     ],
-    'anonymized/{fileName}': [
+    'anonymized/*': [  // Changed from 'anonymized/{fileName}' to 'anonymized/*'
       allow.authenticated.to(['read']),
     ],
     'logs/*': [
