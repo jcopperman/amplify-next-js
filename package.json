@@ -16,10 +16,16 @@
     "@aws-cdk/aws-lambda": "^1.203.0",
     "@aws-cdk/aws-s3": "^1.203.0",
     "@aws-cdk/core": "^1.203.0",
+    "@babel/plugin-transform-class-properties": "^7.25.7",
+    "@babel/plugin-transform-object-rest-spread": "^7.25.7",
     "aws-amplify": "^6.6.4",
+    "core-js": "^3.38.1",
+    "glob": "^9.3.5",
+    "lru-cache": "^11.0.1",
     "next": "14.1.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "rimraf": "^4.4.1"
   },
   "devDependencies": {
     "@aws-amplify/backend": "^1.2.1",
