@@ -22,7 +22,8 @@
     "strictPropertyInitialization": false,
     "typeRoots": [
       "./node_modules/@types"
-    ]
+    ],
+    "types": ["jest"] // Add "jest" if using Jest, or "mocha" if using Mocha
   },
   "exclude": [
     "node_modules",
