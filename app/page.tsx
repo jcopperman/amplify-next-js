@@ -1,69 +1,89 @@
 "use client";
 
-
-import { Authenticator } from '@aws-amplify/ui-react'
-import '@aws-amplify/ui-react/styles.css'
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-import "./../app/app.css";
+import { Authenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { useState } from "react";
 import { Amplify } from "aws-amplify";
-import outputs from "@/amplify_outputs.json";
-import "@aws-amplify/ui-react/styles.css";
+import Storage from "@aws-amplify/storage"; // Correct Named Import
+import outputs from "@/amplify_outputs.json"; // Ensure this path is correct
+import "./../app/app.css";
 
 Amplify.configure(outputs);
 
-const client = generateClient<Schema>();
-
 export default function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
-    
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id })
-  }
+  /**
+   * Handle file selection
+   * @param event - File input change event
+   */
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+      setUploadStatus(null);
+    }
+  };
 
-  function listTodos() {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data: { items: any; }) => setTodos([...data.items]),
-    });
-  }
+  /**
+   * Upload the selected file to S3
+   */
+  const uploadFile = async () => {
+    if (!selectedFile) {
+      setUploadStatus("Please select a file to upload.");
+      return;
+    }
 
-  useEffect(() => {
-    listTodos();
-  }, []);
+    setUploading(true);
+    setUploadStatus(null);
 
-  function createTodo() {
-    client.models.Todo.create({
-      content: window.prompt("Todo content"),
-    });
-  }
+    try {
+      const fileName = `uploads/${selectedFile.name}`;
+      // Upload file to S3 using the correctly imported Storage module
+      await Storage.put(fileName, selectedFile, {
+        contentType: selectedFile.type,
+      });
+
+      setUploadStatus(`File "${selectedFile.name}" uploaded successfully! It will be anonymized shortly.`);
+      setSelectedFile(null);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setUploadStatus("Failed to upload the file. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
-        
     <Authenticator>
       {({ signOut, user }) => (
-    <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li 
-          onClick={() => deleteTodo(todo.id)}
-          key={todo.id}>
-          {todo.content}
-          </li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
-          Review next steps of this tutorial.
-        </a>
-      </div>
-      <button onClick={signOut}>Sign out</button>
-    </main>
-    )}</Authenticator>
+        <main className="container">
+          <h1>Data Anonymizer</h1>
+          <div className="upload-section">
+            <input 
+              type="file" 
+              accept=".json, .csv" 
+              onChange={handleFileChange} 
+            />
+            <button 
+              onClick={uploadFile} 
+              disabled={uploading || !selectedFile}
+            >
+              {uploading ? "Uploading..." : "Upload File"}
+            </button>
+          </div>
+          {uploadStatus && <p className="status-message">{uploadStatus}</p>}
+          <div className="info-section">
+            🥳 File successfully uploaded! The anonymizer will process your data.
+            <br />
+            <a href="https://docs.aws.amazon.com/lambda/latest/dg/welcome.html" target="_blank" rel="noopener noreferrer">
+              Learn more about AWS Lambda
+            </a>
+          </div>
+          <button onClick={signOut} className="signout-button">Sign out</button>
+        </main>
+      )}
+    </Authenticator>
   );
 }
