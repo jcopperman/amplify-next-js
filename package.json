@@ -12,6 +12,7 @@
     "@aws-amplify/core": "^6.4.4",
     "@aws-amplify/storage": "^6.6.9",
     "@aws-amplify/ui-react": "^6.5.2",
+    "@aws-amplify/ui-react-storage": "^3.3.7",
     "@aws-cdk/aws-apigateway": "^1.203.0",
     "@aws-cdk/aws-lambda": "^1.203.0",
     "@aws-cdk/aws-s3": "^1.203.0",
