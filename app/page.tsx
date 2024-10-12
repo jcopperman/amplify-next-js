@@ -47,4 +47,35 @@ export default function App() {
       setUploading(false);
     }
   };
+  return (
+    <Authenticator>
+      {({ signOut }) => (
+        <main className="container">
+          <h1>Data Anonymizer</h1>
+          <div className="upload-section">
+            <input 
+              type="file" 
+              accept=".json, .csv" 
+              onChange={handleFileChange} 
+            />
+            <button 
+              onClick={uploadFile} 
+              disabled={uploading || !selectedFile}
+            >
+              {uploading ? "Uploading..." : "Upload File"}
+            </button>
+          </div>
+          {uploadStatus && <p className="status-message">{uploadStatus}</p>}
+          <div className="info-section">
+            🥳 File successfully uploaded! The anonymizer will process your data.
+            <br />
+            <a href="https://docs.aws.amazon.com/lambda/latest/dg/welcome.html" target="_blank" rel="noopener noreferrer">
+              Learn more about AWS Lambda
+            </a>
+          </div>
+          <button onClick={signOut} className="signout-button">Sign out</button>
+        </main>
+      )}
+    </Authenticator>
+  );
 }
